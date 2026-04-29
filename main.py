@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from mockData import products
+from dtos import ProductDTO
 
 app = FastAPI() # Create a FastAPI instance
 
@@ -57,3 +58,21 @@ def greet_user(request: Request):
     name = request.query_params.get("name")
     age = request.query_params.get("age")
     return f"Hello, {name}! You are {age} years old."
+
+
+
+##body, headers - request headers, query params
+
+
+
+## Different types of http methods
+## How to validate data - DTOS
+@app.post("/create_product") # Define a route for the /products URL with POST method
+def create_product(product_data: ProductDTO):
+    product_data=product_data.model_dump() # Convert the ProductDTO object to a dictionary using model_dump() method
+    products.append(product_data) # Add the new product to the products list
+    return {
+        "message": "Product created successfully",
+        "product": product_data
+    }
+
