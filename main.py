@@ -64,11 +64,9 @@ def greet_user(request: Request):
 ##body, headers - request headers, query params
 
 
-
-## Different types of http methods
 ## How to validate data - DTOS
 @app.post("/create_product") # Define a route for the /products URL with POST method
-def create_product(product_data: ProductDTO):
+def create_product(product_data: ProductDTO):  # Define a function to handle POST requests to the /create_product URL, accepting a ProductDTO object as input
     product_data=product_data.model_dump() # Convert the ProductDTO object to a dictionary using model_dump() method
     products.append(product_data) # Add the new product to the products list
     return {
@@ -76,3 +74,28 @@ def create_product(product_data: ProductDTO):
         "product": product_data
     }
 
+@app.put("/update_product/{product_id}")
+def update_product(product_data: ProductDTO, product_id:int):
+
+    for OneProduct in products:
+        if OneProduct["id"] == product_id:
+            OneProduct["title"] = product_data.title
+            OneProduct["price"] = product_data.price
+            OneProduct["count"] = product_data.count
+
+    return {
+        "message": "Product updated successfully", 
+        "product": product_data
+    }
+
+
+@app.delete("/delete_product/{product_id}")
+def delete_product(product_id:int):
+
+    for OneProduct in products:
+        if OneProduct["id"] == product_id:
+            products.remove(OneProduct)
+
+    return {
+        "message": "Product deleted successfully"
+    }
